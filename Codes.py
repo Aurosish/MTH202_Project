@@ -106,6 +106,35 @@ def X_vs_rPlot(finalDict) :
 
 
 #Exponential Curve fitting to X vs r plots:
+save_results_to = 'D:/SEM 04/MTH 202/Project/Curve_Fit_Plots/'
+
+def g(x, a, b) :
+    return a*np.exp(-b*x)
+
+def f(x, a, b) :
+    return a*pow(x, -b)
+
+def fitPlotExp(finalDict, style, N) :
+    parsed = finalDict
+    r = [i['Parameter (r)'] for i in parsed[N]]
+    X = [j['No. of Isolated Vertices(X)'] for j in parsed[N]]
+    popt, pcov = curve_fit(g, r, X)
+    
+    plt.style.use(style)
+    plt.ylabel('No. of Isolated Vertices(X)')
+    plt.xlabel('Parameter (r)')
+    plt.title(f'X vs r for N = {N}')
+    
+    plt.plot([i['Parameter (r)'] for i in parsed[N]], [j['No. of Isolated Vertices(X)'] for j in parsed[N]], '#471323', marker = 'o', label = 'Points', linestyle = '')
+    x = np.linspace(0, 0.3, 500)
+    plt.plot(x, g(x, popt[0], popt[1]), '#585563',label = f'Curve Fit: {round(popt[0], 2)}*exp({-round(popt[1], 2)}*x)')
+    plt.legend()
+    plt.savefig(save_results_to + f'expCurveFitN={N}.png', dpi = 600)
+    plt.clf()
+#Run the code as:
+for N in [100, 125, 150, 175, 200, 225, 250, 275, 300, 325, 350, 375, 400, 450, 500, 550, 600, 700, 800, 900, 1000, 2000] :
+    fitPlotExp(dataDict, 'seaborn', str(N))
+
 
 
 #Degree Distribution:
